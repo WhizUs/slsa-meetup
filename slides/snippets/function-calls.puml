@@ -1,0 +1,19 @@
+@startuml
+participant "User"
+participant "API Server" as API_Server
+participant "Crossplane Pod" as Crossplane_Pod
+participant "Function Pod" as Function_Pod
+
+User ->> API_Server: Create composite resource
+Crossplane_Pod ->> API_Server: Observe composite resource
+Crossplane_Pod ->> Function_Pod: gRPC RunFunctionRequest
+Function_Pod ->> Crossplane_Pod: gRPC RunFunctionResponse
+
+loop Extra resources needed?
+    Crossplane_Pod ->> API_Server: Get Extra resources
+    Crossplane_Pod ->> Function_Pod: gRPC RunFunctionRequest
+    Function_Pod ->> Crossplane_Pod: gRPC RunFunctionResponse
+    Crossplane_Pod ->> API_Server: Apply desired composed resources
+end
+
+@enduml

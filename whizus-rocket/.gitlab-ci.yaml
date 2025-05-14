@@ -1,0 +1,103 @@
+variables:
+  IMAGE_NAME: $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+
+  CHAINLOOP_TOKEN: $CHAINLOOP_TOKEN
+  CHAINLOOP_SIGNING_KEY: $COSIGN_PRIVATE_KEY
+  CHAINLOOP_SIGNING_PASSWORD: $COSIGN_PASSWORD
+  CHAINLOOP_BASE_URL: "https://github.com/chainloop-dev/chainloop/releases/download"
+  CHAINLOOP_VERSION: "v1.0.0-rc.13"
+  CHAINLOOP_FILENAME: "chainloop-linux-amd64"
+  CHAINLOOP_INSTALL_PATH: "/usr/local/bin"
+
+  COSIGN_PASSWORD: $COSIGN_PASSWORD
+  COSIGN_PRIVATE_KEY: $COSIGN_PRIVATE_KEY
+
+  GITLAB_TOKEN: $CI_JOB_TOKEN
+  RUNNER_GENERATE_ARTIFACTS_METADATA: true
+
+  GIT_DEPTH: 0
+
+
+
+.default-docker-login: &docker-login
+  - echo "$CI_JOB_TOKEN" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+
+stages:
+  - build
+  - release
+
+containerize:
+  stage: build
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  script:
+    - *docker-login
+    - docker pull $CI_REGISTRY/$IMAGE_NAME:latest || true
+    - docker build --cache-from $CI_REGISTRY/$IMAGE_NAME:latest --tag $CI_REGISTRY/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY/$IMAGE_NAME:latest whizus-rocket
+    - docker push $CI_REGISTRY/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+    - docker push $CI_REGISTRY/$IMAGE_NAME:latest
+  rules:
+    - changes:
+        - whizus-rocket/**
+
+download_chainloop:
+  stage: release
+  image: curlimages/curl
+  needs:
+    - job: containerize
+  script: |
+    echo "Step 1: Downloading: ${CHAINLOOP_FILENAME}"
+    curl -vL "${CHAINLOOP_BASE_URL}/${CHAINLOOP_VERSION}/${CHAINLOOP_FILENAME}" -o chainloop || echo "The requested file does not exist: ${CHAINLOOP_BASE_URL}"
+    echo "Step 1: done..."
+    echo "Step 2: Installing chainloop"
+    chmod +x chainloop
+    echo "Step 2: done..."
+    echo "Step 3: check chainloop"
+    ./chainloop --help
+    echo "Step 3: done..."
+  artifacts:
+    paths:
+      - chainloop
+    expire_in: 10 mins
+
+release:
+  stage: release
+  image: docker:stable
+  services:
+    - docker:dind
+  needs:
+    - job: download_chainloop
+  id_tokens:
+    GITLAB_OIDC:
+      aud: chainloop # make sure the audience is chainloop
+  before_script:
+    # Initialize attestation
+    - ./chainloop attestation --token $CHAINLOOP_TOKEN init --workflow build-and-release --project whizus-demo
+    - wget --no-verbose https://raw.githubusercontent.com/anchore/syft/main/install.sh -O - | sh -s -- -b /usr/local/bin
+    # Install Cosign for image signing
+    - wget --no-verbose https://github.com/sigstore/cosign/releases/download/v2.2.1/cosign-linux-amd64 -O /usr/local/bin/cosign
+    - chmod +x /usr/local/bin/cosign
+  script:
+    - *docker-login
+    - syft scan $CI_REGISTRY/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA -o cyclonedx-json=sbom.cyclonedx.json
+
+    # Sign the container image with Cosign
+    - echo "$COSIGN_PRIVATE_KEY" > cosign.key
+    - COSIGN_PASSWORD=$COSIGN_PASSWORD cosign sign --key cosign.key $CI_REGISTRY/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+    - rm cosign.key
+
+    # Add attestation
+    - ./chainloop attestation --token $CHAINLOOP_TOKEN add --name sbom --value sbom.cyclonedx.json
+    - ./chainloop attestation --token $CHAINLOOP_TOKEN add --name image --value $CI_REGISTRY/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+    
+    # Finish attestation
+    - ./chainloop attestation --token $CHAINLOOP_TOKEN push --key env://CHAINLOOP_SIGNING_KEY
+  after_script:
+    - ./chainloop attestation --token $CHAINLOOP_TOKEN reset || true
+  artifacts:
+    paths:
+      - sbom.cyclonedx.json
+    expire_in: 1 hour

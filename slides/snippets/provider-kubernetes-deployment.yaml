@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: provider-kubernetes-71953a1e5c15
+  namespace: crossplane-system
+spec:
+...
+    spec:
+      containers:
+      - image: xpkg.upbound.io/upbound/provider-kubernetes:v0.16.0
+        name: package-runtime
+        ports:
+...
+        - containerPort: 9443
+          name: webhook
+          protocol: TCP
+      serviceAccount: provider-kubernetes
+...

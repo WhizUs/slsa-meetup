@@ -1,0 +1,15 @@
+@startuml
+actor User
+
+component "Provider"
+component "Managed Resource"
+component "External Resource"
+
+User --> "Managed Resource" : creates
+"Provider" --> "Managed Resource" : watches
+"Provider" --> "External Resource" : creates/updates/deletes
+
+note left of "Provider" : Specific to a cloud provider\n(e.g., AWS, GCP, Azure)
+note bottom of "Managed Resource" : Represents the desired state\nof an external resource
+note bottom of "External Resource" : Actual resource in the cloud
+@enduml

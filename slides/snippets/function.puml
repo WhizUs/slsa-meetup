@@ -1,0 +1,14 @@
+@startuml
+left to right direction
+
+component "Composition"
+component "Function"
+component "Managed Resource"
+
+"Composition" --> "Function" : uses
+"Function" --> "Managed Resource" : transforms/configures
+
+note bottom of "Composition" : Defines the structure\nof the infrastructure
+note bottom of "Function" : Can be built-in or custom\n(e.g., patch-and-transform, KCL, Python)
+note bottom of "Managed Resource" : Configured based on\nComposition and Functions
+@enduml

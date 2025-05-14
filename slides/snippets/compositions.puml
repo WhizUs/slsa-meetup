@@ -1,0 +1,26 @@
+@startuml
+left to right direction
+skinparam wrapWidth 100
+
+actor User
+component "Claim"
+component "Composite Resource"
+component "Composition"
+component "Managed Resource"
+component "External Resource"
+component "Provider"
+
+User --> "Claim" : creates
+"Claim" --> "Composite Resource" : creates
+"Composite Resource" --> "Composition" : references
+"Composition" --> "Managed Resource" : defines
+"Provider" --> "Managed Resource" : manages
+"Provider" --> "External Resource" : creates/updates/deletes
+
+note bottom of "Claim" : Requests infrastructure\nwithout specifying details
+note bottom of "Composite Resource" : Represents the infrastructure\ncomposition
+note bottom of "Composition" : Defines how Composite Resources\nare built from Managed Resources
+note bottom of "Managed Resource" : Represents external resources\n(e.g., cloud services)
+note left of "Provider" : Interacts with external APIs\nto manage resources
+note bottom of "External Resource" : Actual resource in the cloud
+@enduml
