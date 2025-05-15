@@ -1,0 +1,143 @@
+{
+ "_type": "https://in-toto.io/Statement/v0.1",
+ "predicateType": "https://slsa.dev/provenance/v1",
+ "subject": [
+  {
+   "name": "chainloop",
+   "digest": {
+    "sha256": "db23e794c59508a70da290750c7b54782499334cd87ab84482a602397c2fc1b2"
+   }
+  }
+ ],
+ "predicate": {
+  "buildDefinition": {
+   "buildType": "https://gitlab.com/gitlab-org/gitlab-runner/-/blob/5c23fd8e/PROVENANCE.md",
+   "externalParameters": {
+    "CHAINLOOP_BASE_URL": "",
+    "CHAINLOOP_FILENAME": "",
+    "CHAINLOOP_INSTALL_PATH": "",
+    "CHAINLOOP_SIGNING_KEY": "",
+    "CHAINLOOP_SIGNING_PASSWORD": "",
+    "CHAINLOOP_TOKEN": "",
+    "CHAINLOOP_VERSION": "",
+    "CI": "",
+    "CI_API_GRAPHQL_URL": "",
+    "CI_API_V4_URL": "",
+    "CI_COMMIT_AUTHOR": "",
+    "CI_COMMIT_BEFORE_SHA": "",
+    "CI_COMMIT_BRANCH": "",
+    "CI_COMMIT_DESCRIPTION": "",
+    "CI_COMMIT_MESSAGE": "",
+    "CI_COMMIT_REF_NAME": "",
+    "CI_COMMIT_REF_PROTECTED": "",
+    "CI_COMMIT_REF_SLUG": "",
+    "CI_COMMIT_SHA": "",
+    "CI_COMMIT_SHORT_SHA": "",
+    "CI_COMMIT_TIMESTAMP": "",
+    "CI_COMMIT_TITLE": "",
+    "CI_CONFIG_PATH": "",
+    "CI_DEFAULT_BRANCH": "",
+    "CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX": "",
+    "CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX": "",
+    "CI_DEPENDENCY_PROXY_PASSWORD": "",
+    "CI_DEPENDENCY_PROXY_SERVER": "",
+    "CI_DEPENDENCY_PROXY_USER": "",
+    "CI_JOB_GROUP_NAME": "",
+    "CI_JOB_ID": "",
+    "CI_JOB_NAME": "",
+    "CI_JOB_NAME_SLUG": "",
+    "CI_JOB_STAGE": "",
+    "CI_JOB_STARTED_AT": "",
+    "CI_JOB_TOKEN": "",
+    "CI_JOB_URL": "",
+    "CI_NODE_TOTAL": "",
+    "CI_PAGES_DOMAIN": "",
+    "CI_PAGES_HOSTNAME": "",
+    "CI_PAGES_URL": "",
+    "CI_PIPELINE_CREATED_AT": "",
+    "CI_PIPELINE_ID": "",
+    "CI_PIPELINE_IID": "",
+    "CI_PIPELINE_NAME": "",
+    "CI_PIPELINE_SOURCE": "",
+    "CI_PIPELINE_URL": "",
+    "CI_PROJECT_CLASSIFICATION_LABEL": "",
+    "CI_PROJECT_DESCRIPTION": "",
+    "CI_PROJECT_ID": "",
+    "CI_PROJECT_NAME": "",
+    "CI_PROJECT_NAMESPACE": "",
+    "CI_PROJECT_NAMESPACE_ID": "",
+    "CI_PROJECT_NAMESPACE_SLUG": "",
+    "CI_PROJECT_PATH": "",
+    "CI_PROJECT_PATH_SLUG": "",
+    "CI_PROJECT_REPOSITORY_LANGUAGES": "",
+    "CI_PROJECT_ROOT_NAMESPACE": "",
+    "CI_PROJECT_TITLE": "",
+    "CI_PROJECT_URL": "",
+    "CI_PROJECT_VISIBILITY": "",
+    "CI_REGISTRY": "",
+    "CI_REGISTRY_IMAGE": "",
+    "CI_REGISTRY_PASSWORD": "",
+    "CI_REGISTRY_USER": "",
+    "CI_REPOSITORY_URL": "",
+    "CI_RUNNER_DESCRIPTION": "",
+    "CI_RUNNER_ID": "",
+    "CI_RUNNER_TAGS": "",
+    "CI_SERVER_FQDN": "",
+    "CI_SERVER_HOST": "",
+    "CI_SERVER_NAME": "",
+    "CI_SERVER_PORT": "",
+    "CI_SERVER_PROTOCOL": "",
+    "CI_SERVER_REVISION": "",
+    "CI_SERVER_SHELL_SSH_HOST": "",
+    "CI_SERVER_SHELL_SSH_PORT": "",
+    "CI_SERVER_URL": "",
+    "CI_SERVER_VERSION": "",
+    "CI_SERVER_VERSION_MAJOR": "",
+    "CI_SERVER_VERSION_MINOR": "",
+    "CI_SERVER_VERSION_PATCH": "",
+    "CI_TEMPLATE_REGISTRY_HOST": "",
+    "COSIGN_PASSWORD": "",
+    "COSIGN_PRIVATE_KEY": "",
+    "GITLAB_CI": "",
+    "GITLAB_FEATURES": "",
+    "GITLAB_TOKEN": "",
+    "GITLAB_USER_EMAIL": "",
+    "GITLAB_USER_ID": "",
+    "GITLAB_USER_LOGIN": "",
+    "GITLAB_USER_NAME": "",
+    "GIT_DEPTH": "",
+    "IMAGE_NAME": "",
+    "RUNNER_GENERATE_ARTIFACTS_METADATA": "",
+    "entryPoint": "download_chainloop",
+    "source": "https://gitlab.com/whizus/meetups/slsa"
+   },
+   "internalParameters": {
+    "architecture": "amd64",
+    "executor": "docker+machine",
+    "job": "9907647374",
+    "name": "blue-6.saas-linux-small-amd64.runners-manager.gitlab.com/default"
+   },
+   "resolvedDependencies": [
+    {
+     "uri": "https://gitlab.com/whizus/meetups/slsa",
+     "digest": {
+      "sha256": "d503dea7bed7cf1da06c32e38f23a9d5d91d2760"
+     }
+    }
+   ]
+  },
+  "runDetails": {
+   "builder": {
+    "id": "https://gitlab.com/whizus/meetups/slsa/-/runners/32976687",
+    "version": {
+     "gitlab-runner": "5c23fd8e"
+    }
+   },
+   "metadata": {
+    "invocationID": "9907647374",
+    "startedOn": "2025-05-02T15:05:47Z",
+    "finishedOn": "2025-05-02T15:05:57Z"
+   }
+  }
+ }
+}
